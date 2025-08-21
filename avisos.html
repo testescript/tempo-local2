@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt">
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Avisos Meteorológicos
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+ </head>
+ <body>
+  <nav>
+   <a href="index.html">
+    Início
+   </a>
+   <a href="avisos.html">
+    Avisos
+   </a>
+   <a href="condicoes.html">
+    Condições
+   </a>
+   <a href="previsao.html">
+    Previsão
+   </a>
+   <a href="mares.html">
+    Marés &amp; Lua
+   </a>
+   <a href="sensores.html">
+    Sensores
+   </a>
+   <a href="historico.html">
+    Histórico
+   </a>
+   <a href="NASA - Imagens Espaciais.html">
+    Nasa
+   </a>
+  </nav>
+  <script>
+   const LAT = 39.3581;
+  const LON = -9.1579;
+  const OWM_API_KEY = 'cd841c18c5722b58544e13701456c88f';
+
+  async function carregarAvisos() {
+    const avisosDiv = document.getElementById("avisos");
+    try {
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&exclude=current,minutely,hourly,daily&appid=${OWM_API_KEY}&lang=pt&units=metric`);
+      const data = await response.json();
+
+      if (data.alerts && data.alerts.length > 0) {
+        avisosDiv.classList.remove('loading');
+        avisosDiv.innerHTML = '<ul>' + data.alerts.map(alert =>
+          `<li><strong>${alert.event}</strong>: ${alert.description}</li>`).join('') + '</ul>';
+      } else {
+        avisosDiv.textContent = "Nenhum aviso meteorológico no momento.";
+      }
+    } catch (error) {
+      avisosDiv.textContent = "Erro ao carregar os avisos meteorológicos.";
+      console.error(error);
+    }
+  }
+
+  carregarAvisos();
+  </script>
+  <main>
+   <h1>
+    Avisos Meteorológicos
+   </h1>
+   <div class="loading" id="avisos">
+    Carregando avisos...
+   </div>
+  </main>
+ </body>
+</html>

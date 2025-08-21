@@ -1,0 +1,107 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f0f8ff;
+  color: #333;
+}
+
+main {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+nav {
+  background: #005fa3;
+  padding: 10px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+nav a:hover,
+nav a.active {
+  text-decoration: underline;
+}
+
+nav a:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+h1, h2 {
+  color: #005fa3;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 1em;
+}
+
+li {
+  background: #e0f0ff;
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.loading {
+  font-style: italic;
+  color: #666;
+  margin-top: 1em;
+}
+
+.loading::before {
+  content: "⏳ ";
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  margin-top: 1em;
+}
+
+table th,
+table td {
+  border: 1px solid #aaa;
+  padding: 8px;
+  text-align: left;
+  background-color: white;
+  color: #333;
+}
+nav {
+  background: #005fa3;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-right: 15px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+nav a:hover,
+nav a.active {
+  background: #003f6b;
+}
+
+/* Para destacar a página atual */
+nav a[href="nasa.html"] {
+  background: #003f6b;
+}

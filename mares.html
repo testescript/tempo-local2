@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt">
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Altura das Ondas &amp; Fase da Lua
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+ </head>
+ <body>
+  <nav>
+   <a href="index.html">
+    Início
+   </a>
+   <a href="avisos.html">
+    Avisos
+   </a>
+   <a href="condicoes.html">
+    Condições
+   </a>
+   <a href="previsao.html">
+    Previsão
+   </a>
+   <a href="mares.html">
+    Marés &amp; Lua
+   </a>
+   <a href="sensores.html">
+    Sensores
+   </a>
+   <a href="historico.html">
+    Histórico
+   </a>
+   <a href="NASA - Imagens Espaciais.html">
+    Nasa
+   </a>
+  </nav>
+  <main>
+   <h1>
+    Altura das Ondas &amp; Fase da Lua
+   </h1>
+   <div aria-label="Informações lunares" class="loading" id="lunares">
+    Carregando dados lunares...
+   </div>
+   <div aria-label="Informações de marés" class="loading" id="mares">
+    Carregando dados de marés...
+   </div>
+  </main>
+  <script>
+   const STORMGLASS_API_KEY = 'SUA_CHAVE_AQUI'; // Mover para back-end em produção
+    const LAT = 39.3581;
+    const LON = -9.1579;
+
+    const formatHour = (h) => h.toString().padStart(2, '0');
+
+    async function carregarMaresELua() {
+      const lunaresDiv = document.getElementById('lunares');
+      const maresDiv = document.getElementById('mares');
+      try {
+        const response = await fetch(`https://api.stormglass.io/v2/weather/point?lat=${LAT}&lng=${LON}&params=moonPhase,tide,swellHeight&source=sg&hourly=true`, {
+          headers: {
+            'Authorization': STORMGLASS_API_KEY
+          }
+        });
+        if (!response.ok) throw new Error('Erro na API Stormglass');
+
+        const data = await response.json();
+        if (!Array.isArray(data.hours) || data.hours.length === 0) throw new Error('Dados indisponíveis');
+
+        const moonPhase = data.hours[0]?.moonPhase ?? 'Indisponível';
+        lunaresDiv.classList.remove('loading');
+        lunaresDiv.textContent = 'Fase da Lua: ' + moonPhase;
+
+        maresDiv.classList.remove('loading');
+        const tidesData = data.hours.slice(0, 6).map(hour => {
+          const date = new Date(hour.time);
+          return `<li>${formatHour(date.getHours())}:00 - Altura das ondas (swell): ${hour.swellHeight.sg ?? 'N/A'} m</li>`;
+        }).join('');
+        maresDiv.innerHTML = '<ul>' + tidesData + '</ul>';
+
+      } catch (error) {
+        lunaresDiv.textContent = 'Erro ao carregar dados lunares.';
+        maresDiv.textContent = 'Erro ao carregar dados de marés.';
+        console.error(error);
+      }
+    }
+
+    carregarMaresELua();
+  </script>
+ </body>
+</html>
