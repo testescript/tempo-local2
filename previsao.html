@@ -1,85 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt">
- <head>
+<head>
   <meta charset="utf-8"/>
-  <title>
-   Previsão Hora a Hora
-  </title>
+  <title>Previsão Hora a Hora</title>
   <link href="style.css" rel="stylesheet"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
- </head>
- <body>
-  <nav>
-   <a href="index.html">
-    Início
-   </a>
-   <a href="avisos.html">
-    Avisos
-   </a>
-   <a href="condicoes.html">
-    Condições
-   </a>
-   <a href="previsao.html">
-    Previsão
-   </a>
-   <a href="mares.html">
-    Marés &amp; Lua
-   </a>
-   <a href="sensores.html">
-    Sensores
-   </a>
-   <a href="historico.html">
-    Histórico
-   </a>
-   <a href="NASA - Imagens Espaciais.html">
-    Nasa
-   </a>
-  </nav>
-  <script>
-   const LAT = 39.3581;
-  const LON = -9.1579;
-  const OWM_API_KEY = 'cd841c18c5722b58544e13701456c88f';
+</head>
+<body>
+  <script src="nav.js"></script>
 
-  async function carregarPrevisao() {
-    const previsaoDiv = document.getElementById('previsao');
-    const tempDiv = document.getElementById('previsao-temperatura');
-    try {
-      const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&exclude=current,minutely,daily,alerts&appid=${OWM_API_KEY}&lang=pt&units=metric`);
-      const data = await response.json();
 
-      previsaoDiv.classList.remove('loading');
-      tempDiv.classList.remove('loading');
-
-      previsaoDiv.innerHTML = '<ul>' + data.hourly.slice(0, 12).map(hour => {
-        const date = new Date(hour.dt * 1000);
-        return `<li>${date.getHours()}:00 - ${hour.weather[0].description}</li>`;
-      }).join('') + '</ul>';
-
-      tempDiv.innerHTML = '<ul>' + data.hourly.slice(0, 12).map(hour => {
-        const date = new Date(hour.dt * 1000);
-        return `<li>${date.getHours()}:00 - ${hour.temp} °C</li>`;
-      }).join('') + '</ul>';
-    } catch (error) {
-      previsaoDiv.textContent = 'Erro ao carregar previsão.';
-      tempDiv.textContent = '';
-      console.error(error);
-    }
-  }
-
-  carregarPrevisao();
-  </script>
   <main>
-   <h1>
-    Previsão Hora a Hora
-   </h1>
-   <div class="loading" id="previsao">
-    Carregando previsão...
-   </div>
-   <h2>
-    Previsão de Temperatura
-   </h2>
-   <div class="loading" id="previsao-temperatura">
-   </div>
+    <h1>Previsão Hora a Hora</h1>
+    <div class="loading" id="previsao-container">
+      Carregando previsão...
+    </div>
   </main>
- </body>
+
+  <script>
+    const LAT = 39.3581;
+    const LON = -9.1579;
+    const OWM_API_KEY = 'cd841c18c5722b58544e13701456c88f';
+
+    async function carregarPrevisao() {
+      const containerDiv = document.getElementById('previsao-container');
+      try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&exclude=current,minutely,daily,alerts&appid=${OWM_API_KEY}&lang=pt&units=metric`);
+        if (!response.ok) {
+          throw new Error('Erro na API OpenWeatherMap');
+        }
+        const data = await response.json();
+
+        containerDiv.classList.remove('loading');
+
+        // Cria uma tabela para exibir os dados de forma mais organizada
+        let htmlTable = `
+          <table border='1' cellpadding='5'>
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>Previsão</th>
+                <th>Temperatura</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        data.hourly.slice(0, 12).forEach(hour => {
+          const date = new Date(hour.dt * 1000);
+          const description = hour.weather[0].description;
+          const temp = hour.temp;
+
+          htmlTable += `
+            <tr>
+              <td>${date.getHours()}:00</td>
+              <td>${description}</td>
+              <td>${temp.toFixed(1)} °C</td>
+            </tr>
+          `;
+        });
+
+        htmlTable += `
+            </tbody>
+          </table>
+        `;
+
+        containerDiv.innerHTML = htmlTable;
+      } catch (error) {
+        containerDiv.textContent = 'Erro ao carregar previsão. Por favor, tente novamente mais tarde.';
+        console.error('Erro na requisição da API de previsão:', error);
+      }
+    }
+
+    carregarPrevisao();
+  </script>
+</body>
 </html>

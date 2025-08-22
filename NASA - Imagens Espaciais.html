@@ -2,159 +2,14 @@
 <html lang="pt">
  <head>
   <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>
-   NASA - Imagens Espaciais
+   Condições Atuais
   </title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
   <link href="style.css" rel="stylesheet"/>
-  <style>
-   /* Estilos específicos da página NASA */
-    .nasa-logo {
-      font-size: 4rem;
-      color: #e62d2d;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    
-    .content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      margin-bottom: 30px;
-    }
-    
-    @media (max-width: 900px) {
-      .content {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease;
-    }
-    
-    .card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .card h2 {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #4fc3f7;
-      display: flex;
-      align-items: center;
-    }
-    
-    .card h2 i {
-      margin-right: 10px;
-    }
-    
-    .image-container {
-      width: 100%;
-      height: 300px;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 20px;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .image-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    
-    .image-container img:hover {
-      transform: scale(1.05);
-    }
-    
-    .image-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(45deg, #1a237e, #01579b);
-      color: #fff;
-      font-size: 1.2rem;
-    }
-    
-    .description {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 15px;
-    }
-    
-    .description h3 {
-      margin-bottom: 10px;
-      color: #ffcc80;
-    }
-    
-    .loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-    }
-    
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: #e62d2d;
-      animation: spin 1s ease-in-out infinite;
-      margin-bottom: 15px;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .btn {
-      display: inline-block;
-      background: linear-gradient(90deg, #e62d2d, #2d6be6);
-      color: white;
-      padding: 12px 25px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 20px;
-      transition: all 0.3s ease;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .api-info {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 30px;
-      font-size: 0.9rem;
-    }
-    
-    .error {
-      color: #ff5252;
-      text-align: center;
-      padding: 20px;
-    }
-  </style>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+ </head>
+ <body>
+  <script src="nav.js"> </script>
  </head>
  <body>
   <script>
@@ -211,7 +66,7 @@
     async function fetchPortugalImage() {
       try {
         // Primeiro, tentamos obter uma imagem recente da Península Ibérica
-        const response = await fetch('https://api.nasa.gov/EPIC/api/natural/images?api_key=Gk8JjDKNTOTEa40IwSyBIYi3JfpR1aRtBNfgH1wi);
+        const response = await fetch('https://api.nasa.gov/EPIC/api/natural/images?api_key=DEMO_KEY');
         const data = await response.json();
         
         if (data && data.length > 0) {
