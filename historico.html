@@ -1,50 +1,30 @@
 <!DOCTYPE html>
-xml
-<!DOCTYPE html>
 <html lang="pt">
- <head>
+<head>
   <meta charset="utf-8"/>
-  <title>
-   Histórico de Temperatura &amp; Umidade
-  </title>
+  <title>Histórico de Temperatura & Umidade</title>
   <link href="style.css" rel="stylesheet"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
- </head>
- <body>
-  <script src="nav.js"> </script>
-  <script>
-   const THINGSPEAK_CHANNEL_ID = '3015307';
-  const THINGSPEAK_READ_API_KEY = 'EKMIDHHFKIXB2USI';
-  const NUM_RESULTS = 10;
-
-  async function carregarHistorico() {
-    const div = document.getElementById('historico');
-    try {
-      const response = await fetch(`https://api.thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/feeds.json?api_key=${THINGSPEAK_READ_API_KEY}&results=${NUM_RESULTS}`);
-      if(!response.ok) throw new Error('Erro na API ThingSpeak');
-      const data = await response.json();
-
-      div.classList.remove('loading');
-      const rows = data.feeds.map(feed => {
-        const date = new Date(feed.created_at);
-        return `<tr><td>${date.toLocaleDateString()}</td><td>${feed.field1 || '--'} °C</td><td>${feed.field2 || '--'} %</td></tr>`;
-      }).join('');
-      div.innerHTML = `<table border='1' cellpadding='5'><thead><tr><th>Data</th><th>Temperatura</th><th>Umidade</th></tr></thead><tbody>${rows}</tbody></table>`;
-    } catch (error) {
-      div.textContent = 'Erro ao carregar histórico.';
-      console.error(error);
-    }
-  }
-
-  carregarHistorico();
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
   <main>
-   <h1>
-    Histórico de Temperatura &amp; Umidade
-   </h1>
-   <div class="loading" id="historico">
-    Carregando histórico...
-   </div>
+    <h1>Histórico de Temperatura & Umidade 📜</h1>
+    
+    <div class="chart-container-wrapper">
+      <div class="chart-container">
+        <h2>Média Horária (Últimas 24h)</h2>
+        <canvas id="historicoChart"></canvas>
+      </div>
+    </div>
+    
+    <h2>Dados Completos</h2>
+    <div id="historico" class="loading">
+      Carregando histórico...
+    </div>
   </main>
- </body>
+  
+  <script src="nav.js"></script>
+  <script src="historico.js"></script>
+</body>
 </html>

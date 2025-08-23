@@ -1,230 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt">
- <head>
+<head>
   <meta charset="utf-8"/>
-  <title>
-   Condições Atuais
-  </title>
+  <title>NASA - Imagens Espaciais 🚀</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
   <link href="style.css" rel="stylesheet"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
- </head>
- <body>
-  <script src="nav.js"> </script>
- </head>
- <body>
-  <script>
-   // Chave de API da NASA (em produção, use uma chave própria)
-    const NASA_API_KEY = 'Gk8JjDKNTOTEa40IwSyBIYi3JfpR1aRtBNfgH1wi';
-    
-    // Elementos DOM
-    const apodContainer = document.getElementById('apod-container');
-    const apodTitle = document.getElementById('apod-title');
-    const apodDescription = document.getElementById('apod-description');
-    const apodDate = document.getElementById('apod-date');
-    const apodBtn = document.getElementById('apod-btn');
-    
-    const portugalContainer = document.getElementById('portugal-container');
-    const portugalDate = document.getElementById('portugal-date');
-    const portugalBtn = document.getElementById('portugal-btn');
-    
-    // Data atual formatada
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('pt-PT', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    
-    // Atualizar datas
-    apodDate.textContent = formattedDate;
-    portugalDate.textContent = formattedDate;
-    
-    // Carregar Imagem do Dia da NASA (APOD)
-    async function fetchAPOD() {
-      try {
-        const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${Gk8JjDKNTOTEa40IwSyBIYi3JfpR1aRtBNfgH1wi}`);
-        const data = await response.json();
-        
-        apodContainer.innerHTML = data.media_type === 'image' 
-          ? `<img src="${data.url}" alt="${data.title}">` 
-          : `<div class="image-placeholder">Conteúdo em vídeo: <a href="${data.url}" style="color: #ffcc80;">Assistir no site da NASA</a></div>`;
-        
-        apodTitle.textContent = data.title;
-        apodDescription.textContent = data.explanation.substring(0, 200) + '...';
-        
-        apodBtn.onclick = () => {
-          alert(data.explanation);
-        };
-      } catch (error) {
-        console.error('Erro ao carregar APOD:', error);
-        apodContainer.innerHTML = '<div class="error">Erro ao carregar a imagem do dia. Tente novamente mais tarde.</div>';
-      }
-    }
-    
-    // Carregar imagem de satélite de Portugal (usando EONET para imagens recentes)
-    async function fetchPortugalImage() {
-      try {
-        // Primeiro, tentamos obter uma imagem recente da Península Ibérica
-        const response = await fetch('https://api.nasa.gov/EPIC/api/natural/images?api_key=DEMO_KEY');
-        const data = await response.json();
-        
-        if (data && data.length > 0) {
-          // Usamos a imagem mais recente
-          const image = data[0];
-          const imageUrl = `https://epic.gsfc.nasa.gov/epic-archive/jpg/${image.image}.jpg`;
-          
-          portugalContainer.innerHTML = `<img src="${imageUrl}" alt="Imagem da Terra">`;
-          
-          portugalBtn.onclick = () => {
-            window.open('https://epic.gsfc.nasa.gov/', '_blank');
-          };
-        } else {
-          // Fallback para uma imagem estática se a API não retornar dados
-          throw new Error('Sem dados da API');
-        }
-      } catch (error) {
-        console.error('Erro ao carregar imagem de satélite:', error);
-        // Fallback para uma imagem estática de Portugal do espaço
-        portugalContainer.innerHTML = `
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Iberian_Peninsula_at_Night.jpg/800px-Iberian_Peninsula_at_Night.jpg" alt="Península Ibérica vista do espaço">
-        `;
-        
-        portugalBtn.onclick = () => {
-          window.open('https://pt.wikipedia.org/wiki/Portugal', '_blank');
-        };
-      }
-    }
-    
-    // Inicializar a página
-    document.addEventListener('DOMContentLoaded', function() {
-      fetchAPOD();
-      fetchPortugalImage();
-      
-      // Atualizar a cada hora
-      setInterval(fetchAPOD, 3600000);
-      setInterval(fetchPortugalImage, 3600000);
-    });
-  </script>
+</head>
+<body>
+ 
   <main>
-   <div class="container">
-    <header>
-     <div class="nasa-logo">
-      <i class="fas fa-planet-ringed">
-      </i>
-     </div>
-     <h1>
-      NASA - Imagens Espaciais
-     </h1>
-     <p class="subtitle">
-      Explore o universo através das lentes da NASA
-     </p>
-    </header>
-    <!-- MENU DE NAVEGAÇÃO -->
-    <nav>
-     <a href="index.html">
-      Início
-     </a>
-     <a href="avisos.html">
-      Avisos
-     </a>
-     <a href="condicoes.html">
-      Condições
-     </a>
-     <a href="previsao.html">
-      Previsão
-     </a>
-     <a href="mares.html">
-      Marés &amp; Lua
-     </a>
-     <a href="sensores.html">
-      Sensores
-     </a>
-     <a href="historico.html">
-      Histórico
-     </a>
-     <a class="active" href="nasa.html">
-      NASA
-     </a>
-    </nav>
-    <div class="content">
-     <div class="card">
-      <h2>
-       <i class="fas fa-image">
-       </i>
-       Imagem do Dia
-      </h2>
-      <div class="image-container" id="apod-container">
-       <div class="loading">
-        <div class="spinner">
+    <h1>Imagens Espaciais da NASA 🌌</h1>
+    <div class="chart-container-wrapper">
+      <div id="apod-card" class="card">
+        <h2>Astronomy Picture of the Day 🔭</h2>
+        <div class="image-container">
+          <img id="apod-image" src="" alt="Imagem do dia da NASA" style="max-width: 100%; height: auto;">
         </div>
-        <p>
-         Carregando imagem do dia...
-        </p>
-       </div>
+        <p id="apod-description" class="loading">Carregando...</p>
       </div>
-      <div class="description">
-       <h3 id="apod-title">
-        Astronomy Picture of the Day
-       </h3>
-       <p id="apod-description">
-        Aguardando dados da NASA...
-       </p>
-       <p id="apod-date">
-       </p>
-      </div>
-      <button class="btn" id="apod-btn">
-       Ver Explicação
-      </button>
-     </div>
-     <div class="card">
-      <h2>
-       <i class="fas fa-satellite">
-       </i>
-       Portugal Vista do Espaço
-      </h2>
-      <div class="image-container" id="portugal-container">
-       <div class="loading">
-        <div class="spinner">
+      <div id="portugal-card" class="card">
+        <h2>Portugal Vista do Espaço 🇵🇹</h2>
+        <div class="image-container">
+          <img id="portugal-image" src="" alt="Portugal vista do espaço" style="max-width: 100%; height: auto;">
         </div>
-        <p>
-         Carregando imagem de satélite...
-        </p>
-       </div>
+        <p id="portugal-info" class="loading">Carregando...</p>
       </div>
-      <div class="description">
-       <h3>
-        Península Ibérica
-       </h3>
-       <p>
-        Imagem de satélite mostrando Portugal e a Península Ibérica a partir do espaço.
-       </p>
-       <p id="portugal-date">
-       </p>
-      </div>
-      <button class="btn" id="portugal-btn">
-       Mais Informações
-      </button>
-     </div>
     </div>
-    <div class="api-info">
-     <p>
-      <strong>
-       Nota:
-      </strong>
-      Esta página utiliza a API pública da NASA. Para obter uma chave de API, visite
-      <a href="https://api.nasa.gov/" style="color: #4fc3f7;">
-       https://api.nasa.gov/
-      </a>
-      .
-     </p>
-    </div>
-    <footer>
-     <p>
-      © 2023 Estação Meteorológica | Dados fornecidos pela NASA API
-     </p>
-    </footer>
-   </div>
   </main>
- </body>
+  <script src="nav.js"></script>
+  <script src="nasa.js"></script>
+</body>
 </html>
