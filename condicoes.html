@@ -21,4 +21,57 @@
   <script src="config.js"></script>
   <script src="condicoes.js"></script>
  </body>
+  <main>
+    <nav>
+      <a href="#" aria-label="Página de Previsão atual" class="active">Previsão</a>
+      <button id="theme-toggle" aria-label="Ativar/Desativar modo escuro">Modo Escuro</button>
+      <span class="last-update" id="update-time">Atualizado: --:--</span>
+    </nav>
+    
+    <h1>Previsão do Tempo para Óbidos</h1>
+
+    <section class="grid-kpis" id="kpis" aria-live="polite">
+      <div class="card"><div class="kpi-title">Temperatura</div><div class="kpi-value" id="kpi-temp">--</div></div>
+      <div class="card"><div class="kpi-title">Humidade</div><div class="kpi-value" id="kpi-hum">--</div></div>
+      <div class="card"><div class="kpi-title">Vento</div><div class="kpi-value" id="kpi-wind">--</div></div>
+      <div class="card"><div class="kpi-title">Precipitação</div><div class="kpi-value" id="kpi-pop">--</div></div>
+      <div class="card"><div class="kpi-title">Pressão</div><div class="kpi-value" id="kpi-press">--</div></div>
+      <div class="card"><div class="kpi-title">UV</div><div class="kpi-value" id="kpi-uv">--</div></div>
+    </section>
+
+    <div id="status" class="loading">A carregar...</div>
+
+    <section id="charts">
+      <figure class="chart-container">
+        <figcaption class="chart-title">Temperatura e Humidade</figcaption>
+        <div class="chart-wrapper"><canvas id="temp-humidity-chart" role="img" aria-label="Gráfico de Temperatura e Humidade nas próximas 24 horas"></canvas></div>
+      </figure>
+
+      <figure class="chart-container">
+        <figcaption class="chart-title">Precipitação e Vento</figcaption>
+        <div class="chart-wrapper"><canvas id="precip-wind-chart" role="img" aria-label="Gráfico de Probabilidade de Precipitação e Velocidade do Vento nas próximas 24 horas"></canvas></div>
+      </figure>
+      </section>
+    
+    <h2>Previsão Horária</h2>
+    <div id="hourly-forecast" class="loading">Carregando previsão horária...</div>
+
+    <section id="sun">
+      <h2>Nascer e Pôr do Sol</h2>
+      <div id="sun-info">
+        <div>Nascer: <span id="sunrise">--:--</span></div>
+        <div>Pôr: <span id="sunset">--:--</span></div>
+        <div>Duração: <span id="day-length">--:--</span></div>
+      </div>
+    </section>
+
+    <footer>Fonte: Open‑Meteo, Stormglass, SunriseSunset</footer>
+  </main>
+  <script src="previsao.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    });
+  </script>
+</body>
 </html>

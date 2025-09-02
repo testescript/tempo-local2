@@ -1,605 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previsão Hora a Hora - Óbidos</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-        :root {
-            --primary: #007bff;
-            --secondary: #6c757d;
-            --accent: #17a2b8;
-            --bg-light: #f4f7f9;
-            --card-bg-light: #ffffff;
-            --text-light: #2c3e50;
-            --shadow-light: 0 4px 25px rgba(0, 0, 0, 0.08);
-            --border-light: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: var(--bg-light);
-            color: var(--text-light);
-            min-height: 100vh;
-            padding: 2rem 1rem;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #fff;
-            padding: 2rem;
-            text-align: center;
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-light);
-        }
-
-        header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        nav {
-            background: var(--primary);
-            padding: 1rem;
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            box-shadow: var(--shadow-light);
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: background 0.3s ease;
-        }
-
-        nav a:hover,
-        nav a.active {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .last-update {
-            background: rgba(0, 0, 0, 0.1);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            display: inline-block;
-            margin-top: 1rem;
-            font-size: 0.85rem;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: var(--card-bg-light);
-            color: var(--text-light);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow-light);
-            border: var(--border-light);
-        }
-
-        .card h2 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 2px solid var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-        }
-
-        .chart-container {
-            min-height: 300px;
-            position: relative;
-            margin-top: 1rem;
-        }
-
-        .hourly-forecast {
-            display: flex;
-            overflow-x: auto;
-            gap: 10px;
-            padding: 10px 0;
-            margin-top: 15px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) var(--card-bg-light);
-        }
-
-        .hourly-forecast::-webkit-scrollbar { height: 8px; }
-        .hourly-forecast::-webkit-scrollbar-track { background: var(--card-bg-light); border-radius: 10px; }
-        .hourly-forecast::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 10px; border: 2px solid var(--card-bg-light); }
-
-        .hour-card {
-            min-width: 100px;
-            padding: 1rem 0.5rem;
-            background: rgba(0, 123, 255, 0.05);
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(0, 123, 255, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .hour-card:hover {
-            transform: scale(1.05);
-        }
-
-        .hour-card .hour { 
-            font-weight: 600; 
-            font-size: 1rem; 
-        }
-        
-        .hour-card .weather-icon { 
-            font-size: 1.8rem; 
-            margin: 0.5rem 0; 
-        }
-        
-        .hour-card .temp { 
-            font-size: 1.2rem; 
-            font-weight: 700; 
-            color: var(--primary); 
-        }
-        
-        .hour-card .humidity, 
-        .hour-card .precip { 
-            font-size: 0.8rem; 
-            color: var(--secondary); 
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--secondary);
-        }
-
-        .loading i {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-            animation: spin 1.5s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-container {
-                min-height: 250px;
-            }
-            
-            nav {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-        }
-
-        .data-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .data-card {
-            background: rgba(0, 123, 255, 0.05);
-            padding: 1.2rem;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(0, 123, 255, 0.1);
-        }
-
-        .data-card i {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            display: block;
-            color: var(--primary);
-        }
-
-        .data-card .value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-
-        .data-card .label {
-            font-size: 0.9rem;
-            color: var(--secondary);
-            font-weight: 400;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Previsão do Tempo</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="nav.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-clock"></i> Previsão Hora a Hora - Óbidos</h1>
-            <p>Previsão detalhada para as próximas 48 horas</p>
-            <div class="last-update">
-                <i class="fas fa-sync-alt"></i> Última atualização: <span id="update-time">--:--:--</span>
-            </div>
-        </header>
-
-        <nav>
-            <a href="index.html">Dashboard Principal</a>
-            <a href="previsao.html" class="active">Previsão Hora a Hora</a>
-            <a href="historico.html">Histórico</a>
-            <button id="refresh-button">
-                <i class="fas fa-sync-alt"></i> Atualizar Dados
-            </button>
-        </nav>
-
-        <div class="dashboard-grid">
-            <div class="card">
-                <h2><i class="fas fa-cloud-sun-rain"></i> Resumo das Próximas Horas</h2>
-                <div class="data-cards">
-                    <div class="data-card">
-                        <i class="fas fa-thermometer-half"></i>
-                        <div class="value" id="max-temp">-- °C</div>
-                        <div class="label">Temp. Máxima</div>
-                    </div>
-                    <div class="data-card">
-                        <i class="fas fa-thermometer-empty"></i>
-                        <div class="value" id="min-temp">-- °C</div>
-                        <div class="label">Temp. Mínima</div>
-                    </div>
-                    <div class="data-card">
-                        <i class="fas fa-tint"></i>
-                        <div class="value" id="max-humidity">-- %</div>
-                        <div class="label">Humidade Máx</div>
-                    </div>
-                    <div class="data-card">
-                        <i class="fas fa-cloud-rain"></i>
-                        <div class="value" id="total-precip">-- mm</div>
-                        <div class="label">Precipitação</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2><i class="fas fa-chart-line"></i> Temperatura e Humidade</h2>
-                <div class="chart-container">
-                    <canvas id="tempChart"></canvas>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2><i class="fas fa-cloud-rain"></i> Precipitação e Vento</h2>
-                <div class="chart-container">
-                    <canvas id="precipChart"></canvas>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2><i class="fas fa-list-ol"></i> Previsão Detalhada (48h)</h2>
-                <div id="hourly-forecast" class="hourly-forecast">
-                    <div class="loading">
-                        <i class="fas fa-spinner"></i>
-                        <p>Carregando previsão...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <main>
+    <nav>
+      <a href="#" class="active">Previsão</a>
+      <button id="theme-toggle">Modo Escuro</button>
+      <span class="last-update" id="update-time">Atualizado: --:--</span>
+    </nav>
+    
+    <div class="header-content">
+      <h1 id="location-name">A carregar...</h1>
+      <p id="location-coords">Lat: -- | Lon: --</p>
     </div>
 
-    <script>
-        // Configurações iniciais
-        const LAT = 39.3610;  // Latitude de Óbidos
-        const LON = -9.1574;  // Longitude de Óbidos
-        let tempChart, precipChart;
+    <form id="location-form">
+      <div class="form-group">
+        <label for="lat">Latitude:</label>
+        <input type="number" id="lat" name="lat" placeholder="e.g., 39.3606" step="any" required>
+      </div>
+      <div class="form-group">
+        <label for="lon">Longitude:</label>
+        <input type="number" id="lon" name="lon" placeholder="e.g., -9.1575" step="any" required>
+      </div>
+      <button type="submit">Obter Previsão</button>
+    </form>
+    
+    <!-- The 'hidden' class is toggled via JavaScript to show/hide main content after data loads -->
+    <div id="content" class="hidden">
+      <section class="grid-kpis" id="kpis" aria-live="polite">
+        <div class="card"><div class="kpi-title">Temperatura</div><div class="kpi-value" id="kpi-temp">--</div></div>
+        <div class="card"><div class="kpi-title">Humidade</div><div class="kpi-value" id="kpi-hum">--</div></div>
+        <div class="card"><div class="kpi-title">Vento</div><div class="kpi-value" id="kpi-wind">--</div></div>
+        <div class="card"><div class="kpi-title">Pressão</div><div class="kpi-value" id="kpi-press">--</div></div>
+      </section>
 
-        // Inicializar a página
-        document.addEventListener('DOMContentLoaded', () => {
-            // Configurar botão de atualização
-            document.getElementById('refresh-button').addEventListener('click', carregarPrevisao);
-            
-            // Carregar previsão
-            carregarPrevisao();
-        });
+      <div id="status" class="loading">A carregar...</div>
+      
+      <section id="charts" class="multi-chart-grid">
+        <div class="chart-container-lg">
+          <div class="chart-title">Comparação de Temperaturas (Open-Meteo vs. WeatherAPI)</div>
+          <div class="chart-wrapper"><canvas id="comparison-chart"></canvas></div>
+        </div>
+        <div class="chart-container-sm">
+          <div class="chart-title">Temperatura e Humidade</div>
+          <div class="chart-wrapper"><canvas id="temp-humidity-chart"></canvas></div>
+        </div>
+        <div class="chart-container-sm">
+          <div class="chart-title">Precipitação e Vento</div>
+          <div class="chart-wrapper"><canvas id="precip-wind-chart"></canvas></div>
+        </div>
+        <div class="chart-container-sm" id="wave-chart-container">
+          <div class="chart-title">Mar: Ondas, Período, Direção</div>
+          <div class="chart-wrapper"><canvas id="wave-chart"></canvas></div>
+        </div>
+      </section>
 
-        // Atualizar timestamp
-        function updateTimestamp() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('pt-PT');
-            document.getElementById('update-time').textContent = timeString;
-        }
+      <!-- Corrigido: removido elemento duplicado com ID hourly-forecast -->
+      <div id="hourly-container" class="loading">A carregar previsão horária...</div>
 
-        // Obter ícone do tempo com base no código meteorológico
-        function getWeatherIcon(code) {
-            const codeMap = {
-                0: '☀️',   // Clear sky
-                1: '🌤️',   // Mainly clear
-                2: '⛅',   // Partly cloudy
-                3: '☁️',   // Overcast
-                45: '🌫️',  // Fog
-                48: '🌫️',  // Depositing rime fog
-                51: '🌧️',  // Drizzle: Light
-                53: '🌧️',  // Drizzle: Moderate
-                55: '🌧️',  // Drizzle: Dense
-                61: '🌧️',  // Rain: Slight
-                63: '🌧️',  // Rain: Moderate
-                65: '🌧️',  // Rain: Heavy
-                80: '🌧️',  // Rain showers: Slight
-                81: '🌧️',  // Rain showers: Moderate
-                82: '🌧️',  // Rain showers: Violent
-                95: '⛈️',   // Thunderstorm: Slight or moderate
-                96: '⛈️',   // Thunderstorm with slight hail
-                99: '⛈️'    // Thunderstorm with heavy hail
-            };
-            
-            return codeMap[code] || '☁️';
-        }
+      <section id="sun">
+        <h2>Nascer e Pôr do Sol</h2>
+        <div id="sun-info">
+          <div>Nascer: <span id="sunrise">--:--</span></div>
+          <div>Pôr: <span id="sunset">--:--</span></div>
+          <div>Duração: <span id="day-length">--:--</span></div>
+        </div>
+      </section>  
 
-        // Carregar previsão da API Open-Meteo
-        async function carregarPrevisao() {
-            try {
-                document.getElementById('hourly-forecast').innerHTML = `
-                    <div class="loading">
-                        <i class="fas fa-spinner"></i>
-                        <p>Carregando previsão...</p>
-                    </div>
-                `;
-
-                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&hourly=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe%2FLisbon&forecast_days=3`);
-                
-                if (!response.ok) {
-                    throw new Error(`Erro de rede: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (!data || !data.hourly) {
-                    throw new Error('Dados de previsão não disponíveis.');
-                }
-
-                // Processar dados para as próximas 48 horas
-                const now = new Date();
-                const currentHour = now.getHours();
-                
-                // Encontrar índice da próxima hora
-                let startIndex = 0;
-                for (let i = 0; i < data.hourly.time.length; i++) {
-                    const timeStr = data.hourly.time[i];
-                    const time = new Date(timeStr);
-                    if (time > now) {
-                        startIndex = i;
-                        break;
-                    }
-                }
-                
-                const endIndex = Math.min(startIndex + 48, data.hourly.time.length);
-                const timeLabels = data.hourly.time.slice(startIndex, endIndex);
-                const tempData = data.hourly.temperature_2m.slice(startIndex, endIndex);
-                const humidityData = data.hourly.relative_humidity_2m.slice(startIndex, endIndex);
-                const precipData = data.hourly.precipitation.slice(startIndex, endIndex);
-                const weatherCodes = data.hourly.weather_code.slice(startIndex, endIndex);
-                const windData = data.hourly.wind_speed_10m.slice(startIndex, endIndex);
-
-                // Calcular estatísticas
-                const maxTemp = Math.max(...tempData);
-                const minTemp = Math.min(...tempData);
-                const maxHumidity = Math.max(...humidityData);
-                const totalPrecip = precipData.reduce((sum, val) => sum + val, 0).toFixed(1);
-
-                // Atualizar cards de resumo
-                document.getElementById('max-temp').textContent = `${maxTemp} °C`;
-                document.getElementById('min-temp').textContent = `${minTemp} °C`;
-                document.getElementById('max-humidity').textContent = `${maxHumidity} %`;
-                document.getElementById('total-precip').textContent = `${totalPrecip} mm`;
-
-                // Formatar labels para o gráfico
-                const labels = timeLabels.map(timeStr => {
-                    const date = new Date(timeStr);
-                    return `${date.getDate()}/${date.getMonth()+1} ${date.getHours()}:00`;
-                });
-
-                // Criar gráficos
-                criarGraficoTemperaturaHumidade(labels, tempData, humidityData);
-                criarGraficoPrecipitacaoVento(labels, precipData, windData);
-                criarPrevisaoHoraria(timeLabels, tempData, humidityData, precipData, weatherCodes);
-
-                updateTimestamp();
-
-            } catch (error) {
-                console.error('Erro ao carregar dados de previsão:', error);
-                document.getElementById('hourly-forecast').innerHTML = `
-                    <div class="loading">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>Erro ao carregar previsão: ${error.message}</p>
-                    </div>
-                `;
-            }
-        }
-
-        function criarGraficoTemperaturaHumidade(labels, tempData, humidityData) {
-            const ctx = document.getElementById('tempChart').getContext('2d');
-            if (tempChart) tempChart.destroy();
-            
-            tempChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Temperatura (°C)',
-                        data: tempData,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        yAxisID: 'y-temp',
-                        tension: 0.3,
-                        fill: true
-                    }, {
-                        label: 'Humidade (%)',
-                        data: humidityData,
-                        borderColor: 'rgb(54, 162, 235)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        yAxisID: 'y-hum',
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: {
-                                maxTicksLimit: 10
-                            }
-                        },
-                        'y-temp': {
-                            position: 'left',
-                            title: { 
-                                display: true, 
-                                text: 'Temperatura (°C)'
-                            },
-                            min: Math.min(...tempData) - 2,
-                            max: Math.max(...tempData) + 2
-                        },
-                        'y-hum': {
-                            position: 'right',
-                            title: { 
-                                display: true, 
-                                text: 'Humidade (%)'
-                            },
-                            min: 0,
-                            max: 100,
-                            grid: {
-                                drawOnChartArea: false
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function criarGraficoPrecipitacaoVento(labels, precipData, windData) {
-            const ctx = document.getElementById('precipChart').getContext('2d');
-            if (precipChart) precipChart.destroy();
-            
-            precipChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Precipitação (mm)',
-                        data: precipData,
-                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                        yAxisID: 'y-precip'
-                    }, {
-                        label: 'Vento (m/s)',
-                        data: windData,
-                        type: 'line',
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        yAxisID: 'y-wind',
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: {
-                                maxTicksLimit: 10
-                            }
-                        },
-                        'y-precip': {
-                            position: 'left',
-                            title: { 
-                                display: true, 
-                                text: 'Precipitação (mm)'
-                            },
-                            beginAtZero: true
-                        },
-                        'y-wind': {
-                            position: 'right',
-                            title: { 
-                                display: true, 
-                                text: 'Vento (m/s)'
-                            },
-                            beginAtZero: true,
-                            grid: {
-                                drawOnChartArea: false
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function criarPrevisaoHoraria(timeLabels, tempData, humidityData, precipData, weatherCodes) {
-            const hourlyForecast = document.getElementById('hourly-forecast');
-            let html = '';
-            
-            timeLabels.forEach((timeStr, index) => {
-                const date = new Date(timeStr);
-                const hourStr = `${date.getHours().toString().padStart(2, '0')}:00`;
-                const dayMonth = `${date.getDate()}/${date.getMonth()+1}`;
-                const icon = getWeatherIcon(weatherCodes[index]);
-                
-                html += `
-                    <div class="hour-card">
-                        <div class="hour">${dayMonth} ${hourStr}</div>
-                        <div class="weather-icon">${icon}</div>
-                        <div class="temp">${Math.round(tempData[index])}°C</div>
-                        <div class="humidity">${humidityData[index]}%</div>
-                        <div class="precip">${precipData[index]}mm</div>
-                    </div>
-                `;
-            });
-            
-            hourlyForecast.innerHTML = html;
-        }
-    </script>
+      <footer>
+        Fonte: Open-Meteo, WeatherAPI, Stormglass, SunriseSunset<br>
+        <small>
+          Dados fornecidos pelas APIs listadas. Consulte as documentações oficiais para requisitos de atribuição e licenciamento.
+        </small>
+      </footer>
+    </div>
+  </main>
+  <script src="previsao.js"></script>
 </body>
 </html>

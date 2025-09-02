@@ -2,32 +2,49 @@
 <html lang="pt">
 <head>
   <meta charset="utf-8"/>
-  <title>NASA - Imagens Espaciais 🚀</title>
+  <title>NASA - Imagens Espaciais 🚀 | Explore o Universo</title>
+  <meta name="description" content="Imagens espaciais incríveis da NASA, incluindo a Astronomy Picture of the Day e vistas de Portugal do espaço.">
+  <meta name="keywords" content="NASA, espaço, astronomia, imagens espaciais, APOD, Portugal, universo">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
   <link href="style.css" rel="stylesheet"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
 </head>
 <body>
- 
   <main>
     <h1>Imagens Espaciais da NASA 🌌</h1>
+
     <div class="chart-container-wrapper">
-      <div id="apod-card" class="card">
+      <div class="card" id="apod-card">
         <h2>Astronomy Picture of the Day 🔭</h2>
         <div class="image-container">
-          <img id="apod-image" src="" alt="Imagem do dia da NASA" style="max-width: 100%; height: auto;">
+          <img id="apod-image" src="" alt="Imagem do dia da NASA">
         </div>
-        <p id="apod-description" class="loading">Carregando...</p>
+        <div class="description">
+          <h3 id="apod-title">Carregando...</h3>
+          <p id="apod-description"></p>
+          <p id="apod-date"></p>
+        </div>
+        <button class="btn" id="apod-btn">Ver Explicação</button>
       </div>
-      <div id="portugal-card" class="card">
+
+      <div class="card" id="portugal-card">
         <h2>Portugal Vista do Espaço 🇵🇹</h2>
-        <div class="image-container">
-          <img id="portugal-image" src="" alt="Portugal vista do espaço" style="max-width: 100%; height: auto;">
+        <div class="image-container" id="portugal-container">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Carregando imagem de satélite...</p>
+          </div>
         </div>
-        <p id="portugal-info" class="loading">Carregando...</p>
+        <div class="description">
+          <h3 id="portugal-title">Penísula Ibérica</h3>
+          <p id="portugal-info">Imagem de satélite mostrando Portugal e a Península Ibérica a partir do espaço.</p>
+          <p id="portugal-date"></p>
+        </div>
+        <button class="btn" id="portugal-btn">Mais Informações</button>
       </div>
     </div>
   </main>
+  
   <script src="nav.js"></script>
   <script src="nasa.js"></script>
 </body>
