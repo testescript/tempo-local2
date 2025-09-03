@@ -1,88 +1,169 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Previsão do Tempo</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="nav.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌤️ Estação Meteorológica</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
-  <main>
-    <nav>
-      <a href="#" class="active">Previsão</a>
-      <button id="theme-toggle">Modo Escuro</button>
-      <span class="last-update" id="update-time">Atualizado: --:--</span>
-    </nav>
-    
-    <div class="header-content">
-      <h1 id="location-name">A carregar...</h1>
-      <p id="location-coords">Lat: -- | Lon: --</p>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="brand">
+                    <h1>🌤️ Estação Meteorológica</h1>
+                </div>
+                <div class="header-info">
+                    <div class="clock" id="clock">--:--:--</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="search-bar">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="city" placeholder="Digite o nome da cidade..." />
+            </div>
+
+            <div id="location-info" class="location-info">
+                <span id="coords-display"></span>
+            </div>
+
+            <div class="header-controls">
+                <button id="btnFetch" class="primary-btn">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+                <button id="themeToggle" class="icon-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="unitToggle" class="icon-btn">°C</button>
+            </div>
+            <div class="view-controls">
+                <label>
+                    Período:
+                    <select id="range">
+                        <option value="24">24h</option>
+                        <option value="48" selected>48h</option>
+                        <option value="72">72h</option>
+                    </select>
+                </label>
+            </div>
+        </section>
+
+        <div id="loadingIndicator" class="loading">
+            <div class="spinner"></div>
+            <div>Carregando dados...</div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-content">
+                <div id="status">🔍 Carregando dados meteorológicos...</div>
+                <div id="lastUpdate" style="margin-top: 0.5rem; color: var(--text-secondary); font-size: var(--font-size-sm);"></div>
+            </div>
+        </div>
+
+        <div id="coordsHint" class="coords-hint" style="display: none;">
+            <strong>📍 Coordenadas:</strong> 
+            Lat: <span id="hintLat">--</span>, Lon: <span id="hintLon">--</span>
+        </div>
+
+        <section class="kpis">
+            <div class="kpi-card">
+                <span class="kpi-icon">🌡️</span>
+                <div class="kpi-value" id="kpiTemp">--</div>
+                <div class="kpi-label">Temperatura</div>
+                <canvas id="sparkTemp" class="spark-container"></canvas>
+            </div>
+            
+            <div class="kpi-card">
+                <span class="kpi-icon">💧</span>
+                <div class="kpi-value" id="kpiHum">--%</div>
+                <div class="kpi-label">Humidade</div>
+                <canvas id="sparkHum" class="spark-container"></canvas>
+            </div>
+            
+            <div class="kpi-card">
+                <span class="kpi-icon">💨</span>
+                <div class="kpi-value" id="kpiWind">-- m/s</div>
+                <div class="kpi-label">Vento</div>
+                <canvas id="sparkWind" class="spark-container"></canvas>
+            </div>
+            
+            <div class="kpi-card">
+                <span class="kpi-icon">📊</span>
+                <div class="kpi-value" id="kpiPress">-- hPa</div>
+                <div class="kpi-label">Pressão</div>
+                <canvas id="sparkPress" class="spark-container"></canvas>
+            </div>
+            
+            <div class="kpi-card">
+                <span class="kpi-icon">☀️</span>
+                <div class="kpi-value" id="kpiUV">--</div>
+                <div class="kpi-label">Índice UV</div>
+                <canvas id="sparkUV" class="spark-container"></canvas>
+            </div>
+        </section>
+
+        <section class="charts-section">
+            <div class="chart-card">
+                <h3 class="chart-title">🌡️ Temperatura</h3>
+                <div class="chart-container">
+                    <canvas id="chartTemp"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">💧 Humidade</h3>
+                <div class="chart-container">
+                    <canvas id="chartHum"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">💨 Vento</h3>
+                <div class="chart-container">
+                    <canvas id="chartWind"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">🌧️ Precipitação</h3>
+                <div class="chart-container">
+                    <canvas id="chartPop"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">📊 Pressão</h3>
+                <div class="chart-container">
+                    <canvas id="chartPress"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">☀️ Índice UV</h3>
+                <div class="chart-container">
+                    <canvas id="chartUV"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <div class="widget hourly-forecast">
+            <div class="widget-header">
+                <h2>⏰ Previsão Horária</h2>
+            </div>
+            <div class="widget-content">
+                <div id="hourly" class="hours-container">
+                    </div>
+            </div>
+        </div>
     </div>
 
-    <form id="location-form">
-      <div class="form-group">
-        <label for="lat">Latitude:</label>
-        <input type="number" id="lat" name="lat" placeholder="e.g., 39.3606" step="any" required>
-      </div>
-      <div class="form-group">
-        <label for="lon">Longitude:</label>
-        <input type="number" id="lon" name="lon" placeholder="e.g., -9.1575" step="any" required>
-      </div>
-      <button type="submit">Obter Previsão</button>
-    </form>
-    
-    <!-- The 'hidden' class is toggled via JavaScript to show/hide main content after data loads -->
-    <div id="content" class="hidden">
-      <section class="grid-kpis" id="kpis" aria-live="polite">
-        <div class="card"><div class="kpi-title">Temperatura</div><div class="kpi-value" id="kpi-temp">--</div></div>
-        <div class="card"><div class="kpi-title">Humidade</div><div class="kpi-value" id="kpi-hum">--</div></div>
-        <div class="card"><div class="kpi-title">Vento</div><div class="kpi-value" id="kpi-wind">--</div></div>
-        <div class="card"><div class="kpi-title">Pressão</div><div class="kpi-value" id="kpi-press">--</div></div>
-      </section>
-
-      <div id="status" class="loading">A carregar...</div>
-      
-      <section id="charts" class="multi-chart-grid">
-        <div class="chart-container-lg">
-          <div class="chart-title">Comparação de Temperaturas (Open-Meteo vs. WeatherAPI)</div>
-          <div class="chart-wrapper"><canvas id="comparison-chart"></canvas></div>
-        </div>
-        <div class="chart-container-sm">
-          <div class="chart-title">Temperatura e Humidade</div>
-          <div class="chart-wrapper"><canvas id="temp-humidity-chart"></canvas></div>
-        </div>
-        <div class="chart-container-sm">
-          <div class="chart-title">Precipitação e Vento</div>
-          <div class="chart-wrapper"><canvas id="precip-wind-chart"></canvas></div>
-        </div>
-        <div class="chart-container-sm" id="wave-chart-container">
-          <div class="chart-title">Mar: Ondas, Período, Direção</div>
-          <div class="chart-wrapper"><canvas id="wave-chart"></canvas></div>
-        </div>
-      </section>
-
-      <!-- Corrigido: removido elemento duplicado com ID hourly-forecast -->
-      <div id="hourly-container" class="loading">A carregar previsão horária...</div>
-
-      <section id="sun">
-        <h2>Nascer e Pôr do Sol</h2>
-        <div id="sun-info">
-          <div>Nascer: <span id="sunrise">--:--</span></div>
-          <div>Pôr: <span id="sunset">--:--</span></div>
-          <div>Duração: <span id="day-length">--:--</span></div>
-        </div>
-      </section>  
-
-      <footer>
-        Fonte: Open-Meteo, WeatherAPI, Stormglass, SunriseSunset<br>
-        <small>
-          Dados fornecidos pelas APIs listadas. Consulte as documentações oficiais para requisitos de atribuição e licenciamento.
-        </small>
-      </footer>
-    </div>
-  </main>
-  <script src="previsao.js"></script>
+    <script src="previsao.js"></script>
 </body>
 </html>
