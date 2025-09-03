@@ -7,44 +7,51 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="style.css">
+  <script src="nav.js"></script>
 </head>
 <body>
- 
 
-  <main>
-    <h1>Sensores Locais</h1>
-    <div id="sensors-container">
-      <div class="sensor-card">
+  <div class="container">
+    <header class="header">
+        <h1>Sensores Locais 📡</h1>
+        <p>Dados de temperatura, umidade e pressão em tempo real.</p>
+    </header>
+
+    <main class="dashboard-grid">
+      <div class="card sensor-card">
         <h2>Temperatura AHT20 🌡️</h2>
-        <span id="tempAHT">Carregando...</span>
+        <p><span id="tempAHT">Carregando...</span></p>
       </div>
-      <div class="sensor-card">
+      <div class="card sensor-card">
         <h2>Umidade AHT20 💧</h2>
-        <span id="humidityAHT">Carregando...</span>
+        <p><span id="humidityAHT">Carregando...</span></p>
       </div>
-      <div class="sensor-card">
+      <div class="card sensor-card">
         <h2>Pressão BMP 🌬️</h2>
-        <span id="pressureBMP">Carregando...</span>
+        <p><span id="pressureBMP">Carregando...</span></p>
       </div>
-      <div class="sensor-card">
+      <div class="card sensor-card">
         <h2>Temperatura BMP 🔥</h2>
-        <span id="tempBMP">Carregando...</span>
+        <p><span id="tempBMP">Carregando...</span></p>
       </div>
-    </div>
-    
+    </main>
+
     <div class="chart-container-wrapper">
-      <div class="chart-container">
-        <h2>Gráfico de Temperatura e Umidade 📊</h2>
-        <canvas id="chartTempAHT"></canvas>
+      <div class="card chart-card">
+        <h3 class="chart-title">Gráfico de Temperatura e Umidade 📊</h3>
+        <div class="chart-container">
+            <canvas id="chartTempAHT"></canvas>
+        </div>
       </div>
-      <div class="chart-container">
-        <h2>Gráfico de Pressão 📈</h2>
-        <canvas id="pressureChart"></canvas>
+      <div class="card chart-card">
+        <h3 class="chart-title">Gráfico de Pressão 📉</h3>
+        <div class="chart-container">
+            <canvas id="pressureChart"></canvas>
+        </div>
       </div>
     </div>
-  </main>
-  
-  <script src="nav.js"></script>
+  </div>
+
   <script src="sensores.js"></script>
 </body>
 </html>

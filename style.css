@@ -839,3 +839,34 @@ body {
         max-height: 280px !important;
     }
 }
+/* Estilos específicos para a página de sensores */
+.sensor-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sensor-card h2 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.sensor-card span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.chart-container-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.chart-container-wrapper .card {
+    flex: 1 1 45%; /* Permite que os cartões de gráfico se ajustem */
+}
