@@ -7,9 +7,9 @@ const API_KEYS = {
 // Localizações padrão
 const DEFAULT_LOCATIONS = {
   weather: { 
-    lat: 39.3606, 
-    lon: -9.1575, 
-    name: "Peniche",
+    lat: 39.3605, 
+    lon: -9.1567, 
+    name: "Óbidos, Portugal",
     country: "PT"
   },
   tides: { 

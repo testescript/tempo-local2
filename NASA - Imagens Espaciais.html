@@ -6,7 +6,7 @@
   <meta name="description" content="Imagens espaciais incríveis da NASA, incluindo a Astronomy Picture of the Day e vistas de Portugal do espaço.">
   <meta name="keywords" content="NASA, espaço, astronomia, imagens espaciais, APOD, Portugal, universo">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-  <link href="style.css" rel="stylesheet"/>
+  <link href="../assets/css/style.css" rel="stylesheet"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
 </head>
 <body>
@@ -43,9 +43,54 @@
         <button class="btn" id="portugal-btn">Mais Informações</button>
       </div>
     </div>
+
+    <!-- SEÇÃO: IMAGEM DA TERRA EM TEMPO REAL -->
+<section class="space-section">
+    <div class="space-card" id="earth-card">
+        <div id="earth-loading" class="loading-indicator">
+            🌍 Carregando imagem da Terra...
+        </div>
+    </div>
+</section>
+
+<!-- SEÇÃO: POSIÇÃO DA ISS -->
+<section class="space-section">
+    <div class="space-card" id="iss-card">
+        <div id="iss-loading" class="loading-indicator">
+            🛰️ Localizando Estação Espacial Internacional...
+        </div>
+    </div>
+</section>
+
+<!-- SEÇÃO: PORTUGAL NO ESPAÇO -->
+<section class="space-section">
+    <div class="space-card" id="portugal-space-card">
+        <h2>🇵🇹 Portugal no Espaço</h2>
+        <div id="portugal-space-content">
+            <div class="loading-indicator">
+                🚀 Carregando informações sobre Portugal no espaço...
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SEÇÃO: FOTOS DE MARTE -->
+<section class="space-section">
+    <div class="space-card" id="mars-card">
+        <h2>🔴 Últimas Fotos de Marte</h2>
+        <div id="mars-content">
+            <div class="loading-indicator">
+                📸 Carregando fotos do rover Perseverance...
+            </div>
+        </div>
+    </div>
+</section>
   </main>
+
+
+
   
-  <script src="nav.js"></script>
-  <script src="nasa.js"></script>
+  <script src="../assets/js/nav.js"></script>
+ <script src="/assets/js/nasa.js"></script>
 </body>
 </html>
